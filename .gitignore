@@ -19,11 +19,22 @@ ios/Pods/
 ios/Runner.xcworkspace/
 ios/Runner.xcodeproj/project.xcworkspace/
 ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcodeproj/xcshareddata/
 ios/Flutter/ephemeral/
 ios/.symlinks/
 ios/Flutter/App.framework
 ios/Flutter/Flutter.framework
 ios/Flutter/Generated.xcconfig
+ios/Flutter/GeneratedPluginRegistrant.*
+ios/Flutter/Debug.xcconfig
+ios/Flutter/Release.xcconfig
+ios/Flutter/AppFrameworkInfo.plist
+ios/Flutter/flutter_export_environment.sh
+*.xcworkspace
+*.xcsettings
+*.plist
+*.xcconfig
+*.pbxproj
 
 # Android related
 android/.gradle/
@@ -39,6 +50,12 @@ macos/Flutter/GeneratedPluginRegistrant.swift
 macos/Runner.xcworkspace/
 macos/Runner.xcodeproj/project.xcworkspace/
 macos/Runner.xcodeproj/xcuserdata/
+macos/Runner.xcodeproj/xcshareddata/
+*.xcworkspace
+*.xcsettings
+*.plist
+*.xcconfig
+*.pbxproj
 
 # Linux related
 linux/flutter/ephemeral/
