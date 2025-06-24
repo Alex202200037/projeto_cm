@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'user_profile_page.dart';
+import 'preferences_drawer.dart';
+import 'profile_drawer.dart';
+import 'hellofarmer_app_bar.dart';
 
 class SalesPage extends StatefulWidget {
   const SalesPage({super.key});
@@ -35,20 +39,33 @@ class _SalesPageState extends State<SalesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final deliveriesToShow = _showAll ? _deliveries : _deliveries.take(2).toList();
+    final deliveriesToShow = _showAll
+        ? _deliveries
+        : _deliveries.take(2).toList();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2A815E),
-        title: const Text('Próximas Entregas', style: TextStyle(color: Colors.white)),
+      appBar: HelloFarmerAppBar(
+        onProfilePressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const UserProfilePage()),
+          );
+        },
       ),
+      drawer: PreferencesDrawer(),
+      endDrawer: ProfileDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 12),
             const Text(
               'Próximas Entregas',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1B4B38)),
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1B4B38),
+              ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -57,20 +74,53 @@ class _SalesPageState extends State<SalesPage> {
                 itemBuilder: (context, index) {
                   final delivery = deliveriesToShow[index];
                   return Card(
-                    color: const Color(0xFFD2E6DD),
+                    color: const Color(0xFFF2F5F3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     margin: const EdgeInsets.only(bottom: 16),
-                    child: ListTile(
-                      leading: Icon(
-                        delivery['type']!.contains('Transportadora') ? Icons.local_shipping : Icons.home,
-                        color: const Color(0xFF2A815E),
-                        size: 32,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
                       ),
-                      title: Text(delivery['type']!, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Text('Morada: ${delivery['address']}'),
-                          Text('Data: ${delivery['date']}'),
+                          Icon(
+                            delivery['type']!.contains('Transportadora')
+                                ? Icons.local_shipping
+                                : Icons.home,
+                            color: const Color(0xFF2A815E),
+                            size: 40,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  delivery['type']!,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Color(0xFF1B4B38),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Morada: ${delivery['address']}',
+                                  style: const TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  'Data: ${delivery['date']}',
+                                  style: const TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -82,7 +132,14 @@ class _SalesPageState extends State<SalesPage> {
               Center(
                 child: TextButton(
                   onPressed: () => setState(() => _showAll = true),
-                  child: const Text('Ver mais'),
+                  child: const Text(
+                    'Ver mais',
+                    style: TextStyle(
+                      color: Color(0xFF2A815E),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
           ],
@@ -90,4 +147,4 @@ class _SalesPageState extends State<SalesPage> {
       ),
     );
   }
-} 
+}

@@ -129,7 +129,7 @@ class SettingsItem extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xFF1B4B38),
-              fontSize: 16,
+              fontSize: 14,
             ),
           ),
           const SizedBox(height: 4),

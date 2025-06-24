@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'splash_screen.dart';
 import 'welcome_page.dart';
 import 'sales_page.dart';
 import 'market_page.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF2A815E)),
         useMaterial3: true,
       ),
-      home: const MainNavigation(),
+      home: SplashScreen(),
     );
   }
 }
@@ -35,12 +36,12 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    WelcomePage(),
-    SalesPage(),
-    MarketPage(),
-    NotificationsPage(),
-    ManagementPage(),
+  final List<Widget> _pages = [
+    WelcomePage(), // placeholder, will be replaced in build
+    const SalesPage(),
+    const MarketPage(),
+    const NotificationsPage(),
+    const ManagementPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -51,8 +52,23 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    Widget page;
+    if (_selectedIndex == 0) {
+      page = WelcomePage(
+        currentIndex: _selectedIndex,
+        onTabSelected: _onItemTapped,
+      );
+    } else if (_selectedIndex == 1) {
+      page = const SalesPage();
+    } else if (_selectedIndex == 2) {
+      page = const MarketPage();
+    } else if (_selectedIndex == 3) {
+      page = const NotificationsPage();
+    } else {
+      page = const ManagementPage();
+    }
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: page,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF2A815E),
@@ -64,9 +80,18 @@ class _MainNavigationState extends State<MainNavigation> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: 'Vendas'),
-          BottomNavigationBarItem(icon: Icon(Icons.agriculture), label: 'Banca'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_none), label: 'Notificações'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: 'Vendas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.agriculture),
+            label: 'Banca',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_none),
+            label: 'Notificações',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Gestão'),
         ],
       ),

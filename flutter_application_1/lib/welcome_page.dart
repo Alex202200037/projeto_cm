@@ -1,105 +1,28 @@
 import 'package:flutter/material.dart';
-import 'settings_page.dart';
+import 'hellofarmer_app_bar.dart';
+import 'user_profile_page.dart';
+import 'preferences_drawer.dart';
+import 'profile_drawer.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+  const WelcomePage({super.key, this.currentIndex = 0, this.onTabSelected});
+
+  final int currentIndex;
+  final ValueChanged<int>? onTabSelected;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2A815E),
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(Icons.menu, color: Colors.white, size: 32),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Image.asset('assets/logo.jpg', height: 38),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'HelloFarmer',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    Text(
-                      'O Futuro do Agricultor',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Builder(
-              builder: (context) => GestureDetector(
-                onTap: () => Scaffold.of(context).openEndDrawer(),
-                child: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 20,
-                  child: Icon(Icons.person, color: Color(0xFF2A815E), size: 28),
-                ),
-              ),
-            ),
-          ],
-        ),
-        toolbarHeight: 70,
+      appBar: HelloFarmerAppBar(
+        onProfilePressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const UserProfilePage()),
+          );
+        },
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: const [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFF2A815E)),
-              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 22)),
-            ),
-            ListTile(title: Text('Página Inicial')),
-            ListTile(title: Text('Encomendas')),
-            ListTile(title: Text('Produtos')),
-            ListTile(title: Text('Clientes')),
-            ListTile(title: Text('Análise de Dados')),
-            ListTile(title: Text('Canais de Vendas')),
-            ListTile(title: Text('Anúncios')),
-            ListTile(title: Text('Destaque de Anúncios')),
-            ListTile(title: Text('Finanças')),
-            ListTile(title: Text('Tutoriais')),
-          ],
-        ),
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(24),
-          children: const [
-            SizedBox(height: 32),
-            CircleAvatar(radius: 40, backgroundColor: Color(0xFF2A815E), child: Icon(Icons.person, color: Colors.white, size: 48)),
-            SizedBox(height: 16),
-            Text('Nome: Alexandre Miguel', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 8),
-            Text('Email: alexandre@email.com', style: TextStyle(fontSize: 16)),
-            SizedBox(height: 8),
-            Divider(),
-            ListTile(leading: Icon(Icons.settings), title: Text('Definições')),
-            ListTile(leading: Icon(Icons.logout), title: Text('Sair')),
-          ],
-        ),
-      ),
+      drawer: PreferencesDrawer(),
+      endDrawer: ProfileDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: ListView(
@@ -112,26 +35,33 @@ class WelcomePage extends StatelessWidget {
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             const Divider(height: 32, thickness: 1.2),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
-                Text(
-                  'Recomendados para si...',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B4B38),
-                    fontSize: 20,
+                Expanded(
+                  child: Text(
+                    'Recomendados para si...',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B4B38),
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                Text(
-                  'Ver mais',
-                  style: TextStyle(
-                    color: Color(0xFF2A815E),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                Expanded(
+                  child: Text(
+                    'Ver mais',
+                    style: TextStyle(
+                      color: Color(0xFF2A815E),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
@@ -179,6 +109,32 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 60),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        selectedItemColor: const Color(0xFF2A815E),
+        unselectedItemColor: const Color(0xFF1B4B38),
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+        onTap: onTabSelected ?? (index) {},
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            label: 'Vendas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.agriculture),
+            label: 'Banca',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_none),
+            label: 'Notificações',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Gestão'),
+        ],
       ),
     );
   }
