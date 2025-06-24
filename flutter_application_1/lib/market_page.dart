@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'hellofarmer_app_bar.dart';
+import 'profile_drawer.dart';
+import 'preferences_drawer.dart';
 
 class MarketPage extends StatefulWidget {
   const MarketPage({super.key});
@@ -11,7 +14,7 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
   late TabController _tabController;
 
   // Dados fictícios
-  final Map<String, dynamic> _banca = {
+  Map<String, dynamic> _banca = {
     'nome': 'Quinta da Alegria',
     'descricao': 'Bem-vindo à Quinta da Alegria, cultivamos com paixão e respeito pela natureza. Produção Sustentável e local. Da nossa terra para a sua mesa, sempre fresco de Qualidade.',
     'localizacao': 'Azeitão',
@@ -55,44 +58,90 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2A815E),
-        title: const Text('A Minha Banca', style: TextStyle(color: Colors.white)),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Banca'),
-            Tab(text: 'Anúncios'),
-            Tab(text: 'Avaliações'),
-          ],
-        ),
+      appBar: HelloFarmerAppBar(
+        onProfilePressed: () {
+          showProfileDrawer(context);
+        },
       ),
-      body: TabBarView(
-        controller: _tabController,
+      drawer: PreferencesDrawer(),
+      body: Column(
         children: [
-          _buildBancaTab(),
-          _buildAdsTab(),
-          _buildReviewsTab(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBancaTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: ListView(
-        children: [
-          Text(_banca['nome'], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(_banca['descricao'], style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 16),
-          const Text('Detalhes', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text('Localização: ${_banca['localizacao']}'),
-          Text('Morada: ${_banca['morada']}'),
-          const SizedBox(height: 16),
-          const Text('Mercados Habituais', style: TextStyle(fontWeight: FontWeight.bold)),
-          ...(_banca['mercados'] as List<String>).map((m) => Text(m)).toList(),
+          TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Banca'),
+              Tab(text: 'Anúncios'),
+              Tab(text: 'Avaliações'),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                ListView(
+                  padding: const EdgeInsets.all(24),
+                  children: [
+                    const SizedBox(height: 16),
+                    Text('A Minha Banca', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1B4B38)), textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    Divider(thickness: 2, color: Color(0xFF2A815E)),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(_banca['nome'], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1B4B38))),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFD2E6DD),
+                            foregroundColor: const Color(0xFF1B4B38),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            elevation: 0,
+                          ),
+                          onPressed: () {
+                            _showEditBancaModal(context);
+                          },
+                          icon: const Icon(Icons.edit, size: 18),
+                          label: const Text('Editar Banca'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      height: 160,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.image, size: 80, color: Color(0xFFB0B0B0)),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text('Descrição', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1B4B38))),
+                    const SizedBox(height: 8),
+                    Text(_banca['descricao'], style: const TextStyle(fontSize: 16, color: Color(0xFF1B4B38))),
+                    const SizedBox(height: 24),
+                    const Text('Detalhes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1B4B38))),
+                    const SizedBox(height: 8),
+                    Text('Localização: ${_banca['localizacao']}   Morada: ${_banca['morada']}', style: const TextStyle(fontSize: 16, color: Color(0xFF1B4B38))),
+                    const SizedBox(height: 24),
+                    const Text('Mercados Habituais', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1B4B38))),
+                    const SizedBox(height: 8),
+                    ...(_banca['mercados'] as List<String>).map((m) => Text(m, style: const TextStyle(fontSize: 16, color: Color(0xFF1B4B38)))).toList(),
+                    const SizedBox(height: 32),
+                    Divider(thickness: 2, color: Color(0xFF2A815E)),
+                    const SizedBox(height: 24),
+                    const Text('Alguma Dúvida?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Color(0xFF1B4B38)), textAlign: TextAlign.center),
+                    const SizedBox(height: 8),
+                    const Text('Entre em contacto connosco!', style: TextStyle(fontSize: 18, color: Color(0xFF2A815E)), textAlign: TextAlign.center),
+                    const SizedBox(height: 60),
+                  ],
+                ),
+                _buildAdsTab(),
+                _buildReviewsTab(),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -187,6 +236,98 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
             ),
         ],
       ),
+    );
+  }
+
+  void _showEditBancaModal(BuildContext context) {
+    final nomeController = TextEditingController(text: _banca['nome']);
+    final descricaoController = TextEditingController(text: _banca['descricao']);
+    final localizacaoController = TextEditingController(text: _banca['localizacao']);
+    final moradaController = TextEditingController(text: _banca['morada']);
+    final mercadosController = TextEditingController(text: (_banca['mercados'] as List<String>).join(', '));
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 24,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Editar Banca', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: nomeController,
+                  decoration: const InputDecoration(labelText: 'Nome'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: descricaoController,
+                  decoration: const InputDecoration(labelText: 'Descrição'),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: localizacaoController,
+                  decoration: const InputDecoration(labelText: 'Localização'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: moradaController,
+                  decoration: const InputDecoration(labelText: 'Morada'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: mercadosController,
+                  decoration: const InputDecoration(labelText: 'Mercados (separados por vírgula)'),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2A815E)),
+                        onPressed: () {
+                          setState(() {
+                            _banca = {
+                              'nome': nomeController.text,
+                              'descricao': descricaoController.text,
+                              'localizacao': localizacaoController.text,
+                              'morada': moradaController.text,
+                              'mercados': mercadosController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
+                            };
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Guardar'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 } 

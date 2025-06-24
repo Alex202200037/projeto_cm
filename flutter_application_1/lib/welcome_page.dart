@@ -16,13 +16,10 @@ class WelcomePage extends StatelessWidget {
       backgroundColor: const Color(0xFFFFFFFF),
       appBar: HelloFarmerAppBar(
         onProfilePressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const UserProfilePage()),
-          );
+          showProfileDrawer(context);
         },
       ),
       drawer: PreferencesDrawer(),
-      endDrawer: ProfileDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: ListView(
@@ -109,32 +106,6 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 60),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        selectedItemColor: const Color(0xFF2A815E),
-        unselectedItemColor: const Color(0xFF1B4B38),
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
-        onTap: onTabSelected ?? (index) {},
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: 'Vendas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.agriculture),
-            label: 'Banca',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_none),
-            label: 'Notificações',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Gestão'),
-        ],
       ),
     );
   }

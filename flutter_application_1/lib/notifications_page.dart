@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'hellofarmer_app_bar.dart';
+import 'profile_drawer.dart';
+import 'preferences_drawer.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -24,10 +27,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     final notificationsToShow = _showAll ? _notifications : _notifications.take(4).toList();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2A815E),
-        title: const Text('Notificações', style: TextStyle(color: Colors.white)),
+      appBar: HelloFarmerAppBar(
+        onProfilePressed: () {
+          showProfileDrawer(context);
+        },
       ),
+      drawer: PreferencesDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

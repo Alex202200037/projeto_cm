@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'welcome_page.dart';
+import 'profile_drawer.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -20,9 +21,12 @@ class SettingsPage extends StatelessWidget {
             const Text('HelloFarmer', style: TextStyle(color: Colors.white)),
           ],
         ),
-        actions: const [
-          Icon(Icons.account_circle, color: Colors.white),
-          SizedBox(width: 16),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Colors.white),
+            onPressed: () => showProfileDrawer(context),
+          ),
+          const SizedBox(width: 16),
         ],
       ),
       body: Padding(
@@ -78,34 +82,6 @@ class SettingsPage extends StatelessWidget {
           // mais tarde
         },
         child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 4,
-        selectedItemColor: const Color(0xFF2A815E),
-        unselectedItemColor: const Color(0xFF1B4B38),
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const WelcomePage()),
-            );
-          } else if (index == 4) {
-            // Already on SettingsPage, do nothing
-          }
-          // Add navigation for other tabs if needed
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: 'Vendas',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Banca'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notificações',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Gestão'),
-        ],
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'profile_drawer.dart';
+import 'hellofarmer_app_bar.dart';
+import 'preferences_drawer.dart';
 
 class ManagementPage extends StatefulWidget {
   const ManagementPage({super.key});
@@ -91,88 +93,91 @@ class _ManagementPageState extends State<ManagementPage> {
     final cards = _sectionCards[section]!;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            HelloFarmerHeader(onProfileTap: () => showProfileDrawer(context)),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 16,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SectionMenu(
-                      sections: _sections,
-                      selectedSection: _selectedSection,
-                      onSectionTap: (i) {
-                        setState(() {
-                          _selectedSection = i;
-                          _expandedCard = null;
-                        });
-                      },
+      drawer: PreferencesDrawer(),
+      body: Column(
+        children: [
+          HelloFarmerAppBar(
+            onProfilePressed: () {
+              showProfileDrawer(context);
+            },
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 16,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionMenu(
+                    sections: _sections,
+                    selectedSection: _selectedSection,
+                    onSectionTap: (i) {
+                      setState(() {
+                        _selectedSection = i;
+                        _expandedCard = null;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          section,
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1B4B38),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Tudo num só lugar!',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF2A815E),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        SummaryCards(
+                          cards: cards,
+                          expandedCard: _expandedCard,
+                          onCardTap: (i) {
+                            setState(() {
+                              _expandedCard = _expandedCard == i ? null : i;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 32),
+                        if (_expandedCard != null)
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(top: 8),
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 12,
+                                ),
+                              ],
+                            ),
+                            child: _buildDetailsContent(
+                              cards[_expandedCard!]['type'],
+                            ),
+                          ),
+                      ],
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            section,
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1B4B38),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Tudo num só lugar!',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFF2A815E),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          SummaryCards(
-                            cards: cards,
-                            expandedCard: _expandedCard,
-                            onCardTap: (i) {
-                              setState(() {
-                                _expandedCard = _expandedCard == i ? null : i;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 32),
-                          if (_expandedCard != null)
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.only(top: 8),
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 12,
-                                  ),
-                                ],
-                              ),
-                              child: _buildDetailsContent(
-                                cards[_expandedCard!]['type'],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 16, right: 8),
@@ -541,60 +546,6 @@ class _ManagementPageState extends State<ManagementPage> {
       default:
         return const Text('Mais detalhes em breve!');
     }
-  }
-}
-
-class HelloFarmerHeader extends StatelessWidget {
-  final VoidCallback? onProfileTap;
-  const HelloFarmerHeader({this.onProfileTap, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF2A815E),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Image.asset('assets/logo.jpg', height: 38),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'HelloFarmer',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                  Text(
-                    'O Futuro do Agricultor',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          GestureDetector(
-            onTap: onProfileTap,
-            child: const CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 20,
-              child: Icon(Icons.person, color: Color(0xFF2A815E), size: 28),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 

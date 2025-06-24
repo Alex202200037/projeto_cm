@@ -45,13 +45,10 @@ class _SalesPageState extends State<SalesPage> {
     return Scaffold(
       appBar: HelloFarmerAppBar(
         onProfilePressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const UserProfilePage()),
-          );
+          showProfileDrawer(context);
         },
       ),
       drawer: PreferencesDrawer(),
-      endDrawer: ProfileDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
