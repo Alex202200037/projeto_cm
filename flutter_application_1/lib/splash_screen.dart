@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'welcome_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF2A815E),
       body: Center(
-        child: Image.asset('assets/logo.png', width: 200, height: 200),
+        child: Image.asset('assets/logo.jpg', width: 200, height: 200),
       ),
     );
   }

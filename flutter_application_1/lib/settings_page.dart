@@ -13,7 +13,7 @@ class SettingsPage extends StatelessWidget {
         title: Row(
           children: [
             Image.asset(
-              'assets/logo.png',
+              'assets/logo.jpg',
               height: 30,
             ), // coloca o teu logo aqui
             const SizedBox(width: 10),

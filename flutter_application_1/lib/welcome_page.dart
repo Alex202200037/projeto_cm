@@ -16,12 +16,14 @@ class WelcomePage extends StatelessWidget {
           children: [
             Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.white, size: 32),
-                  onPressed: () {},
+                Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.white, size: 32),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  ),
                 ),
                 const SizedBox(width: 8),
-                Image.asset('assets/logo.png', height: 38),
+                Image.asset('assets/logo.jpg', height: 38),
                 const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,14 +49,56 @@ class WelcomePage extends StatelessWidget {
                 ),
               ],
             ),
-            const CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 20,
-              child: Icon(Icons.person, color: Color(0xFF2A815E), size: 28),
+            Builder(
+              builder: (context) => GestureDetector(
+                onTap: () => Scaffold.of(context).openEndDrawer(),
+                child: const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 20,
+                  child: Icon(Icons.person, color: Color(0xFF2A815E), size: 28),
+                ),
+              ),
             ),
           ],
         ),
         toolbarHeight: 70,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: const [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Color(0xFF2A815E)),
+              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 22)),
+            ),
+            ListTile(title: Text('Página Inicial')),
+            ListTile(title: Text('Encomendas')),
+            ListTile(title: Text('Produtos')),
+            ListTile(title: Text('Clientes')),
+            ListTile(title: Text('Análise de Dados')),
+            ListTile(title: Text('Canais de Vendas')),
+            ListTile(title: Text('Anúncios')),
+            ListTile(title: Text('Destaque de Anúncios')),
+            ListTile(title: Text('Finanças')),
+            ListTile(title: Text('Tutoriais')),
+          ],
+        ),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: const EdgeInsets.all(24),
+          children: const [
+            SizedBox(height: 32),
+            CircleAvatar(radius: 40, backgroundColor: Color(0xFF2A815E), child: Icon(Icons.person, color: Colors.white, size: 48)),
+            SizedBox(height: 16),
+            Text('Nome: Alexandre Miguel', style: TextStyle(fontSize: 18)),
+            SizedBox(height: 8),
+            Text('Email: alexandre@email.com', style: TextStyle(fontSize: 16)),
+            SizedBox(height: 8),
+            Divider(),
+            ListTile(leading: Icon(Icons.settings), title: Text('Definições')),
+            ListTile(leading: Icon(Icons.logout), title: Text('Sair')),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -133,59 +177,6 @@ class WelcomePage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 60),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF2A815E),
-        onPressed: () {
-          // Adicionar post
-        },
-        child: const Icon(Icons.add, size: 36),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade300, width: 1),
-          ),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: 0,
-          selectedItemColor: const Color(0xFF2A815E),
-          unselectedItemColor: const Color(0xFF1B4B38),
-          backgroundColor: Colors.white,
-          type: BottomNavigationBarType.fixed,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
-          onTap: (index) {
-            if (index == 4) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
-            } else if (index == 0) {
-              // Already on WelcomePage, do nothing
-            }
-            // Add navigation for other tabs if needed
-          },
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined),
-              label: 'Vendas',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.agriculture),
-              label: 'Banca',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_none),
-              label: 'Notificações',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Gestão',
-            ),
           ],
         ),
       ),
