@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
 import 'firebase_service.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class PublishAdModal extends StatefulWidget {
   const PublishAdModal({super.key});
@@ -28,6 +30,9 @@ class _PublishAdModalState extends State<PublishAdModal> {
   final FocusNode _moradaFocusNode = FocusNode();
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
+
+  File? _pickedImage;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -174,16 +179,86 @@ class _PublishAdModalState extends State<PublishAdModal> {
             children: [
               const Text('Publicar Anúncio', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
+              Center(
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => SafeArea(
+                            child: Wrap(
+                              children: [
+                                ListTile(
+                                  leading: const Icon(Icons.photo_library),
+                                  title: const Text('Galeria'),
+                                  onTap: () async {
+                                    final picked = await _picker.pickImage(source: ImageSource.gallery);
+                                    if (picked != null) {
+                                      setState(() {
+                                        _pickedImage = File(picked.path);
+                                      });
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.camera_alt),
+                                  title: const Text('Câmara'),
+                                  onTap: () async {
+                                    final picked = await _picker.pickImage(source: ImageSource.camera);
+                                    if (picked != null) {
+                                      setState(() {
+                                        _pickedImage = File(picked.path);
+                                      });
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: _pickedImage != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.file(_pickedImage!, height: 120, width: 120, fit: BoxFit.cover),
+                            )
+                          : Container(
+                              height: 120,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Icon(Icons.add_a_photo, size: 48, color: Color(0xFFB0B0B0)),
+                            ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text('Toque para escolher ou tirar foto'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _tituloController,
                 decoration: const InputDecoration(labelText: 'Título*'),
                 validator: (v) => v == null || v.isEmpty ? 'Campo obrigatório' : null,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                enableSuggestions: true,
+                autocorrect: true,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _categoriaController,
                 decoration: const InputDecoration(labelText: 'Categoria*'),
                 validator: (v) => v == null || v.isEmpty ? 'Campo obrigatório' : null,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                enableSuggestions: true,
+                autocorrect: true,
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -191,6 +266,10 @@ class _PublishAdModalState extends State<PublishAdModal> {
                 decoration: const InputDecoration(labelText: 'Descrição*'),
                 maxLines: 2,
                 validator: (v) => v == null || v.isEmpty ? 'Campo obrigatório' : null,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                enableSuggestions: true,
+                autocorrect: true,
               ),
               const SizedBox(height: 12),
               CompositedTransformTarget(
@@ -203,6 +282,10 @@ class _PublishAdModalState extends State<PublishAdModal> {
                     prefixIcon: Icon(Icons.location_on),
                   ),
                   validator: (v) => v == null || v.isEmpty ? 'Campo obrigatório' : null,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  enableSuggestions: true,
+                  autocorrect: true,
                 ),
               ),
               if (_isCheckingMorada)
@@ -214,11 +297,19 @@ class _PublishAdModalState extends State<PublishAdModal> {
               TextFormField(
                 controller: _detalhesController,
                 decoration: const InputDecoration(labelText: 'Detalhes'),
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                enableSuggestions: true,
+                autocorrect: true,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _precoController,
                 decoration: const InputDecoration(labelText: 'Preço'),
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                enableSuggestions: true,
+                autocorrect: true,
               ),
               const SizedBox(height: 24),
               Row(
@@ -243,6 +334,7 @@ class _PublishAdModalState extends State<PublishAdModal> {
                             localizacao: _localizacaoController.text,
                             detalhes: _detalhesController.text,
                             preco: _precoController.text,
+                            fotoUrl: _pickedImage?.path,
                           );
                           Navigator.pop(context);
                         } else {

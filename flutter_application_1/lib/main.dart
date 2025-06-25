@@ -9,6 +9,7 @@ import 'market_page.dart';
 import 'notifications_page.dart';
 import 'management_page.dart';
 import 'publish_ad_page.dart';
+import 'notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +68,12 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.initialize(context);
+  }
 
   void _onItemTapped(int index) {
     setState(() {

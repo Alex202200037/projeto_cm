@@ -38,6 +38,11 @@ class _SalesPageState extends State<SalesPage> {
   bool _showAll = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deliveriesToShow = _showAll
         ? _deliveries

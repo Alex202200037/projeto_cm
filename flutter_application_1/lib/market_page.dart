@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:io';
 
 class MarketPage extends StatefulWidget {
   final List<Map<String, dynamic>> anuncios;
@@ -168,7 +169,7 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
                   child: ListTile(
-                    leading: const Icon(Icons.image, size: 40, color: Color(0xFF2A815E)),
+                    leading: _anuncioImage(ad['fotoUrl']),
                     title: Text(ad['titulo']!, style: const TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,28 +305,51 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
     Set<Marker> markers = {};
     BitmapDescriptor customIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
     for (var anuncio in widget.anuncios) {
-      if (anuncio['localizacao'] != null && anuncio['localizacao']!.isNotEmpty) {
+      double? lat;
+      double? lng;
+
+      // 1. Tenta extrair lat/lng do campo 'detalhes'
+      if (anuncio['detalhes'] != null && anuncio['detalhes'].toString().contains('Lat:')) {
+        final regex = RegExp(r'Lat:\s*([\-\d.]+),\s*Lng:\s*([\-\d.]+)');
+        final match = regex.firstMatch(anuncio['detalhes']);
+        if (match != null) {
+          lat = double.tryParse(match.group(1)!);
+          lng = double.tryParse(match.group(2)!);
+        }
+      }
+
+      // 2. Se não houver lat/lng, tenta geocoding do campo 'localizacao'
+      if ((lat == null || lng == null) && anuncio['localizacao'] != null && anuncio['localizacao']!.isNotEmpty) {
         try {
           List<Location> locations = await locationFromAddress(anuncio['localizacao']!).timeout(const Duration(seconds: 7));
           if (locations.isNotEmpty) {
-            final loc = locations.first;
-            markers.add(
-              Marker(
-                markerId: MarkerId(anuncio['titulo'] ?? ''),
-                position: LatLng(loc.latitude, loc.longitude),
-                icon: customIcon,
-                infoWindow: const InfoWindow(title: '', snippet: ''),
-                onTap: () {
-                  _showAnuncioModal(anuncio);
-                },
-              ),
-            );
+            lat = locations.first.latitude;
+            lng = locations.first.longitude;
           }
-        } on TimeoutException catch (_) {
-          // Timeout: não adicionar marker, opcionalmente logar
-        } catch (e) {
-          // Ignore geocoding errors
+        } catch (_) {
+          // Ignora erros de geocoding
         }
+      }
+
+      // 3. Só adiciona marker se tiver coordenadas válidas
+      if (lat != null && lng != null) {
+        markers.add(
+          Marker(
+            markerId: MarkerId('${anuncio['titulo']}_${lat}_${lng}_${DateTime.now().millisecondsSinceEpoch}_${anuncio.hashCode}'),
+            position: LatLng(lat, lng),
+            icon: customIcon,
+            infoWindow: InfoWindow(
+              title: anuncio['titulo'] ?? '',
+              snippet: anuncio['preco'] ?? '',
+              onTap: () {
+                _showAnuncioModal(anuncio);
+              },
+            ),
+            onTap: () {
+              _showAnuncioModal(anuncio);
+            },
+          ),
+        );
       }
     }
     return markers;
@@ -525,5 +549,14 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
         );
       },
     );
+  }
+
+  Widget _anuncioImage(String? fotoUrl) {
+    if (fotoUrl != null && fotoUrl.startsWith('assets/')) {
+      return Image.asset(fotoUrl, fit: BoxFit.cover, height: 80, width: 80);
+    } else if (fotoUrl != null && fotoUrl.isNotEmpty) {
+      return Image.file(File(fotoUrl), fit: BoxFit.cover, height: 80, width: 80);
+    }
+    return const Icon(Icons.image, size: 80, color: Color(0xFFB0B0B0));
   }
 } 
