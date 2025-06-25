@@ -5,6 +5,7 @@ import 'preferences_drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,6 +21,8 @@ class MarketPage extends StatefulWidget {
 
 class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final ImagePicker _picker = ImagePicker();
+  String? _bancaImagePath;
 
   // Dados fictícios
   Map<String, dynamic> _banca = {
@@ -117,9 +120,21 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
                         color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Center(
-                        child: Icon(Icons.image, size: 80, color: Color(0xFFB0B0B0)),
-                      ),
+                      child: _bancaImagePath != null 
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.file(
+                                File(_bancaImagePath!),
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/quinta.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 24),
                     const Text('Descrição', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1B4B38))),
@@ -361,6 +376,7 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
     final localizacaoController = TextEditingController(text: _banca['localizacao']);
     final moradaController = TextEditingController(text: _banca['morada']);
     final mercadosController = TextEditingController(text: (_banca['mercados'] as List<String>).join(', '));
+    String? tempImagePath = _bancaImagePath;
 
     showModalBottomSheet(
       context: context,
@@ -369,79 +385,166 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 24,
-            right: 24,
-            top: 24,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Editar Banca', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: nomeController,
-                  decoration: const InputDecoration(labelText: 'Nome'),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: descricaoController,
-                  decoration: const InputDecoration(labelText: 'Descrição'),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: localizacaoController,
-                  decoration: const InputDecoration(labelText: 'Localização'),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: moradaController,
-                  decoration: const InputDecoration(labelText: 'Morada'),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: mercadosController,
-                  decoration: const InputDecoration(labelText: 'Mercados (separados por vírgula)'),
-                ),
-                const SizedBox(height: 24),
-                Row(
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 24,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300),
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+                    const Text('Editar Banca', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 16),
+                    
+                    // Seção da imagem
+                    const Text('Imagem da Banca', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: () async {
+                        final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                        if (image != null) {
+                          setModalState(() {
+                            tempImagePath = image.path;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 120,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFF2A815E).withOpacity(0.3)),
+                        ),
+                        child: tempImagePath != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.file(
+                                  File(tempImagePath!),
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_photo_alternate,
+                                    size: 40,
+                                    color: const Color(0xFF2A815E).withOpacity(0.6),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Adicionar imagem',
+                                    style: TextStyle(
+                                      color: const Color(0xFF2A815E).withOpacity(0.6),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2A815E)),
-                        onPressed: () {
-                          setState(() {
-                            _banca = {
-                              'nome': nomeController.text,
-                              'descricao': descricaoController.text,
-                              'localizacao': localizacaoController.text,
-                              'morada': moradaController.text,
-                              'mercados': mercadosController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
-                            };
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Guardar'),
+                    const SizedBox(height: 16),
+                    
+                    TextField(
+                      controller: nomeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nome',
+                        border: OutlineInputBorder(),
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: descricaoController,
+                      decoration: const InputDecoration(
+                        labelText: 'Descrição',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: localizacaoController,
+                      decoration: const InputDecoration(
+                        labelText: 'Localização',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: moradaController,
+                      decoration: const InputDecoration(
+                        labelText: 'Morada',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: mercadosController,
+                      decoration: const InputDecoration(
+                        labelText: 'Mercados (separados por vírgula)',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade300,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2A815E),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _banca = {
+                                  'nome': nomeController.text,
+                                  'descricao': descricaoController.text,
+                                  'localizacao': localizacaoController.text,
+                                  'morada': moradaController.text,
+                                  'mercados': mercadosController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
+                                };
+                                _bancaImagePath = tempImagePath;
+                              });
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Banca atualizada com sucesso!'),
+                                  backgroundColor: Color(0xFF2A815E),
+                                ),
+                              );
+                            },
+                            child: const Text('Guardar'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );

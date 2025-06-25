@@ -1,88 +1,260 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'settings_page.dart';
+import 'contacts_page.dart';
+import 'management_page.dart';
+import 'main_navigation_controller.dart';
 
 class PreferencesDrawer extends StatelessWidget {
-  const PreferencesDrawer({super.key});
+  final Function(int)? onTabSelected;
+  
+  const PreferencesDrawer({super.key, this.onTabSelected});
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF2A815E)),
-            child: Text(
-              'Definições',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Color(0xFF2A815E)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 30,
+                  child: Icon(
+                    Icons.person,
+                    color: Color(0xFF2A815E),
+                    size: 35,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  FirebaseAuth.instance.currentUser?.email ?? 'Utilizador',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Text(
+                  'HelloFarmer',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Página Inicial'),
-            onTap: () => Navigator.pop(context),
+          _buildDrawerItem(
+            context,
+            icon: Icons.home,
+            title: 'Página Inicial',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(0);
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.shopping_bag),
-            title: const Text('Encomendas'),
-            onTap: () => Navigator.pop(context),
+          _buildDrawerItem(
+            context,
+            icon: Icons.shopping_cart,
+            title: 'Vendas',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(1);
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.shopping_cart),
-            title: const Text('Produtos'),
-            onTap: () => Navigator.pop(context),
+          _buildDrawerItem(
+            context,
+            icon: Icons.agriculture,
+            title: 'Banca/Mercado',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(2);
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: const Text('Clientes'),
-            onTap: () => Navigator.pop(context),
+          _buildDrawerItem(
+            context,
+            icon: Icons.notifications,
+            title: 'Notificações',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(3);
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.analytics),
-            title: const Text('Análise de Dados'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.store),
-            title: const Text('Canais de Vendas'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.campaign),
-            title: const Text('Anúncios'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.star),
-            title: const Text('Destaque de Anúncios'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.euro),
-            title: const Text('Finanças'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.school),
-            title: const Text('Tutoriais'),
-            onTap: () => Navigator.pop(context),
+          _buildDrawerItem(
+            context,
+            icon: Icons.settings,
+            title: 'Gestão',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(0);
+            },
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Definições'),
-            onTap: () => Navigator.pop(context),
+          _buildDrawerItem(
+            context,
+            icon: Icons.shopping_bag,
+            title: 'Encomendas',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(1);
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Sair'),
-            onTap: () => Navigator.pop(context),
+          _buildDrawerItem(
+            context,
+            icon: Icons.inventory,
+            title: 'Produtos',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(2);
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.people,
+            title: 'Clientes',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(3);
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.analytics,
+            title: 'Análise de Dados',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(4);
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.store,
+            title: 'Canais de Vendas',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(5);
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.campaign,
+            title: 'Anúncios',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(6);
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.star,
+            title: 'Destaque de Anúncios',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(7);
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.euro,
+            title: 'Finanças',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(8);
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.school,
+            title: 'Tutoriais',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              MainNavigationController().changeTab?.call(4);
+              ManagementPageController().changeSection?.call(9);
+            },
+          ),
+          const Divider(),
+          _buildDrawerItem(
+            context,
+            icon: Icons.contact_support,
+            title: 'Contactos',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ContactsPage()),
+              );
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.settings,
+            title: 'Definições',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+            },
+          ),
+          _buildDrawerItem(
+            context,
+            icon: Icons.logout,
+            title: 'Sair',
+            onTap: () async {
+              Navigator.pop(context);
+              await FirebaseAuth.instance.signOut();
+            },
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDrawerItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: const Color(0xFF2A815E)),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF1B4B38),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      onTap: onTap,
+      hoverColor: const Color(0xFF2A815E).withOpacity(0.1),
     );
   }
 }

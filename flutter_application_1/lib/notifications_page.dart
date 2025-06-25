@@ -27,6 +27,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     final notificationsToShow = _showAll ? _notifications : _notifications.take(4).toList();
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: HelloFarmerAppBar(
         onProfilePressed: () {
           showProfileDrawer(context);

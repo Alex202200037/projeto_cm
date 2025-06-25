@@ -10,6 +10,8 @@ import 'notifications_page.dart';
 import 'management_page.dart';
 import 'publish_ad_page.dart';
 import 'notification_service.dart';
+import 'preferences_drawer.dart';
+import 'main_navigation_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +62,8 @@ class AuthGate extends StatelessWidget {
 }
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  final int initialIndex;
+  const MainNavigation({super.key, this.initialIndex = 0});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -72,10 +75,22 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.initialIndex;
     NotificationService.initialize(context);
+    MainNavigationController().changeTab = (int index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    };
   }
 
   void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _navigateToTab(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -119,6 +134,7 @@ class _MainNavigationState extends State<MainNavigation> {
     }
     return Scaffold(
       body: page,
+      drawer: PreferencesDrawer(onTabSelected: _onItemTapped),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF2A815E),
@@ -127,6 +143,7 @@ class _MainNavigationState extends State<MainNavigation> {
         type: BottomNavigationBarType.fixed,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+        elevation: 8,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),

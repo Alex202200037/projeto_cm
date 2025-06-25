@@ -3,9 +3,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'profile_drawer.dart';
 import 'hellofarmer_app_bar.dart';
 import 'preferences_drawer.dart';
+import 'main_navigation_controller.dart';
 
 class ManagementPage extends StatefulWidget {
-  const ManagementPage({super.key});
+  final int initialSection;
+  const ManagementPage({super.key, this.initialSection = 0});
 
   @override
   State<ManagementPage> createState() => _ManagementPageState();
@@ -86,6 +88,18 @@ class _ManagementPageState extends State<ManagementPage> {
       {'label': 'Visualizações', 'value': 120, 'type': 'tutoriais_views'},
     ],
   };
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedSection = widget.initialSection;
+    ManagementPageController().changeSection = (int section) {
+      setState(() {
+        _selectedSection = section;
+        _expandedCard = null;
+      });
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,14 +192,6 @@ class _ManagementPageState extends State<ManagementPage> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 16, right: 8),
-        child: FloatingActionButton(
-          backgroundColor: const Color(0xFF2A815E),
-          onPressed: () {},
-          child: const Icon(Icons.add, size: 36),
-        ),
       ),
     );
   }

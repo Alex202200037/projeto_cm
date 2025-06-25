@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'user_profile_page.dart';
-import 'preferences_drawer.dart';
 import 'profile_drawer.dart';
 import 'hellofarmer_app_bar.dart';
+import 'preferences_drawer.dart';
 
 class SalesPage extends StatefulWidget {
   const SalesPage({super.key});
@@ -48,6 +48,7 @@ class _SalesPageState extends State<SalesPage> {
         ? _deliveries
         : _deliveries.take(2).toList();
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: HelloFarmerAppBar(
         onProfilePressed: () {
           showProfileDrawer(context);
