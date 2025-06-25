@@ -52,7 +52,10 @@ class AuthGate extends StatelessWidget {
           return SplashScreen();
         }
         if (snapshot.hasData) {
-          return MainNavigation();
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final initialTab = args != null && args['tab'] != null ? args['tab'] as int : 0;
+          final initialSection = args != null && args['section'] != null ? args['section'] as int : 0;
+          return MainNavigation(initialIndex: initialTab, initialSection: initialSection);
         } else {
           return SplashScreen();
         }
@@ -63,7 +66,8 @@ class AuthGate extends StatelessWidget {
 
 class MainNavigation extends StatefulWidget {
   final int initialIndex;
-  const MainNavigation({super.key, this.initialIndex = 0});
+  final int initialSection;
+  const MainNavigation({super.key, this.initialIndex = 0, this.initialSection = 0});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -71,11 +75,13 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
+  int _initialSection = 0;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
+    _initialSection = widget.initialSection;
     NotificationService.initialize(context);
     MainNavigationController().changeTab = (int index) {
       setState(() {
@@ -130,7 +136,7 @@ class _MainNavigationState extends State<MainNavigation> {
     } else if (_selectedIndex == 3) {
       page = const NotificationsPage();
     } else {
-      page = const ManagementPage();
+      page = ManagementPage(initialSection: _initialSection);
     }
     return Scaffold(
       body: page,
