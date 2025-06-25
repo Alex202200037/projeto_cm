@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
+import 'firebase_service.dart';
 
 class PublishAdModal extends StatefulWidget {
-  final void Function(Map<String, String>) onPublish;
-  const PublishAdModal({required this.onPublish, super.key});
+  const PublishAdModal({super.key});
 
   @override
   State<PublishAdModal> createState() => _PublishAdModalState();
@@ -236,14 +236,14 @@ class _PublishAdModalState extends State<PublishAdModal> {
                       style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2A815E)),
                       onPressed: () async {
                         if (_formKey.currentState!.validate() && _moradaValida) {
-                          widget.onPublish({
-                            'titulo': _tituloController.text,
-                            'categoria': _categoriaController.text,
-                            'descricao': _descricaoController.text,
-                            'localizacao': _localizacaoController.text,
-                            'detalhes': _detalhesController.text,
-                            'preco': _precoController.text,
-                          });
+                          await FirebaseService().publishAd(
+                            titulo: _tituloController.text,
+                            categoria: _categoriaController.text,
+                            descricao: _descricaoController.text,
+                            localizacao: _localizacaoController.text,
+                            detalhes: _detalhesController.text,
+                            preco: _precoController.text,
+                          );
                           Navigator.pop(context);
                         } else {
                           setState(() { _moradaValida = false; });

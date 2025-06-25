@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "408008826593",
+    "project_id": "hellofarmer-2d5aa",
+    "storage_bucket": "hellofarmer-2d5aa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408008826593:android:c9df1f025c628dbd1ce1a0",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408008826593-h68f79csoerpsg405culv3obvg45888h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_application_1",
+            "certificate_hash": "7e82e78d396dd9930116799133ea6a61baf78a2e"
+          }
+        },
+        {
+          "client_id": "408008826593-h6uhdgj2skucrh1b38jcims2mv82hpme.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeZdNNDawtri83yRF14iPw0kFKVEM7TTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "408008826593-h6uhdgj2skucrh1b38jcims2mv82hpme.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

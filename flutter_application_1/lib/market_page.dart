@@ -10,7 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MarketPage extends StatefulWidget {
-  final List<Map<String, String>> anuncios;
+  final List<Map<String, dynamic>> anuncios;
   const MarketPage({Key? key, required this.anuncios}) : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
   bool _showAllReviews = false;
 
   Marker? _selectedMarker;
-  Map<String, String>? _selectedAnuncio;
+  Map<String, dynamic>? _selectedAnuncio;
 
   @override
   void initState() {
@@ -423,7 +423,7 @@ class _MarketPageState extends State<MarketPage> with SingleTickerProviderStateM
     );
   }
 
-  void _showAnuncioModal(Map<String, String> anuncio) {
+  void _showAnuncioModal(Map<String, dynamic> anuncio) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

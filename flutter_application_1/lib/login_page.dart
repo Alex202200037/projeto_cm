@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'welcome_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
+import 'firebase_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +14,8 @@ class _LoginPageState extends State<LoginPage> {
   String email = '';
   String password = '';
   bool isObscured = true;
+  bool _isLoading = false;
+  String? _error;
 
   @override
   Widget build(BuildContext context) {
@@ -43,29 +44,21 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 16),
                       _buildTextField('Password', Icons.lock, true),
                       const SizedBox(height: 24),
+                      if (_error != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                        ),
                       ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setBool('isLoggedIn', true);
-                            await prefs.setString('userEmail', email);
-                            Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (_) => const MainNavigation()));
-                          }
-                        },
+                        onPressed: _isLoading ? null : _onLogin,
                         style: _buttonStyle(),
-                        child: const Text("Entrar"),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text("Entrar"),
                       ),
                       const SizedBox(height: 12),
                       OutlinedButton(
-                        onPressed: () {
-                          // Guest login
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const MainNavigation()));
-                        },
+                        onPressed: _isLoading ? null : _onGoogleLogin,
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0x802A815E)),
                           shape: RoundedRectangleBorder(
@@ -74,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
                         ),
                         child: const Text(
-                          'Entrar como Convidado',
+                          'Entrar com Google',
                           style: TextStyle(
                               fontSize: 16,
                               color: Color(0xFF2A815E),
@@ -124,5 +117,47 @@ class _LoginPageState extends State<LoginPage> {
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     );
+  }
+
+  Future<void> _onLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+    _formKey.currentState!.save();
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    try {
+      await FirebaseService().loginWithEmail(email.trim(), password.trim());
+      if (!mounted) return;
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainNavigation()));
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _onGoogleLogin() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    try {
+      await FirebaseService().signInWithGoogle();
+      if (!mounted) return;
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainNavigation()));
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }
