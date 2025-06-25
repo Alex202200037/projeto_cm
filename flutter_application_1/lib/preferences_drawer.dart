@@ -121,11 +121,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Encomendas',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 1},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(1);
+              });
             },
           ),
           _buildDrawerItem(
@@ -134,11 +134,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Produtos',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 2},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(2);
+              });
             },
           ),
           _buildDrawerItem(
@@ -147,11 +147,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Clientes',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 3},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(3);
+              });
             },
           ),
           _buildDrawerItem(
@@ -160,11 +160,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Análise de Dados',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 4},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(4);
+              });
             },
           ),
           _buildDrawerItem(
@@ -173,11 +173,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Canais de Vendas',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 5},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(5);
+              });
             },
           ),
           _buildDrawerItem(
@@ -186,11 +186,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Anúncios',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 6},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(6);
+              });
             },
           ),
           _buildDrawerItem(
@@ -199,11 +199,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Destaque de Anúncios',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 7},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(7);
+              });
             },
           ),
           _buildDrawerItem(
@@ -212,11 +212,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Finanças',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 8},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(8);
+              });
             },
           ),
           _buildDrawerItem(
@@ -225,11 +225,11 @@ class PreferencesDrawer extends StatelessWidget {
             title: 'Tutoriais',
             onTap: () {
               Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-                arguments: {'tab': 4, 'section': 9},
-              );
+              Navigator.popUntil(context, (route) => route.isFirst);
+              Future.delayed(const Duration(milliseconds: 100), () {
+                MainNavigationController().changeTab?.call(4);
+                ManagementPageController().changeSection?.call(9);
+              });
             },
           ),
           const Divider(),
