@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'welcome_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'main.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -30,9 +32,16 @@ class SignUpPage extends StatelessWidget {
                 _buildInput('Password', obscure: true),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    // Simular registo
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setBool('isLoggedIn', true);
+                    // Buscar email do campo
+                    final emailField = (context as Element).findAncestorWidgetOfExactType<SignUpPage>()?.key;
+                    // Para já, guardar um email fictício
+                    await prefs.setString('userEmail', 'user@email.com');
                     Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const WelcomePage()));
+                      MaterialPageRoute(builder: (_) => const MainNavigation()));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2A815E),

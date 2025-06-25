@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'welcome_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -42,11 +44,14 @@ class _LoginPageState extends State<LoginPage> {
                       _buildTextField('Password', Icons.lock, true),
                       const SizedBox(height: 24),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();                   
+                            _formKey.currentState!.save();
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool('isLoggedIn', true);
+                            await prefs.setString('userEmail', email);
                             Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (_) => const WelcomePage()));
+                              MaterialPageRoute(builder: (_) => const MainNavigation()));
                           }
                         },
                         style: _buttonStyle(),
@@ -59,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const WelcomePage()));
+                                  builder: (_) => const MainNavigation()));
                         },
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0x802A815E)),
