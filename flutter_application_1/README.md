@@ -171,10 +171,6 @@ lib/
 - **António Guerreiro** - 202200106
 - **Bruna Rossa** - 202200603
 
-## Contacto
-
-Para questões sobre o projeto, contacte-nos através da aplicação ou envie um email para [email@exemplo.com]
-
 ---
 
 **"Conectando Agricultores ao Futuro Digital"** 
