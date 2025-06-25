@@ -23,10 +23,13 @@ class AuthLandingPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
-                  children: const [
-                    Icon(Icons.agriculture, size: 48, color: Colors.white),
-                    SizedBox(height: 12),
-                    Text(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset('assets/logo.jpg', height: 64),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
                       'HelloFarmer',
                       style: TextStyle(
                         fontSize: 26,
@@ -34,7 +37,7 @@ class AuthLandingPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'O Futuro da Agricultura',
                       style: TextStyle(
                         fontSize: 14,

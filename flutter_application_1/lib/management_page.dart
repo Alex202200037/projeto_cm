@@ -4,6 +4,7 @@ import 'profile_drawer.dart';
 import 'hellofarmer_app_bar.dart';
 import 'preferences_drawer.dart';
 import 'main_navigation_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ManagementPage extends StatefulWidget {
   final int initialSection;
@@ -671,25 +672,37 @@ class HelloFarmerProfileDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: const [
-          SizedBox(height: 8),
+        children: [
+          const SizedBox(height: 8),
           CircleAvatar(
             radius: 40,
-            backgroundColor: Color(0xFF2A815E),
-            child: Icon(Icons.person, color: Colors.white, size: 48),
+            backgroundColor: const Color(0xFF2A815E),
+            backgroundImage: user?.photoURL != null
+                ? NetworkImage(user!.photoURL!)
+                : null,
+            child: user?.photoURL == null
+                ? const Icon(Icons.person, color: Colors.white, size: 48)
+                : null,
           ),
-          SizedBox(height: 16),
-          Text('Nome: Alexandre Miguel', style: TextStyle(fontSize: 18)),
-          SizedBox(height: 8),
-          Text('Email: alexandre@email.com', style: TextStyle(fontSize: 16)),
-          SizedBox(height: 8),
-          Divider(),
-          ListTile(leading: Icon(Icons.settings), title: Text('Definições')),
-          ListTile(leading: Icon(Icons.logout), title: Text('Sair')),
+          const SizedBox(height: 16),
+          Text(
+            user?.displayName ?? 'Nome não disponível',
+            style: const TextStyle(fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            user?.email ?? 'Email não disponível',
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          const Divider(),
+          const ListTile(leading: Icon(Icons.settings), title: Text('Definições')),
+          const ListTile(leading: Icon(Icons.logout), title: Text('Sair')),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HelloFarmerAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onMenuPressed;
@@ -33,14 +34,19 @@ class HelloFarmerAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onTap:
                       onProfilePressed ??
                       () => Scaffold.of(context).openEndDrawer(),
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 20,
-                    child: Icon(
-                      Icons.person,
-                      color: Color(0xFF2A815E),
-                      size: 28,
-                    ),
+                    backgroundImage: FirebaseAuth.instance.currentUser?.photoURL != null
+                        ? NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!)
+                        : null,
+                    child: FirebaseAuth.instance.currentUser?.photoURL == null
+                        ? const Icon(
+                            Icons.person,
+                            color: Color(0xFF2A815E),
+                            size: 28,
+                          )
+                        : null,
                   ),
                 ),
               ),

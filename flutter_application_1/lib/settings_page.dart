@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'hellofarmer_app_bar.dart';
+import 'preferences_drawer.dart';
+import 'profile_drawer.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -22,9 +24,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: const PreferencesDrawer(),
       appBar: HelloFarmerAppBar(
         onProfilePressed: () {
-          // Implementar perfil
+          showProfileDrawer(context);
         },
       ),
       body: SingleChildScrollView(
@@ -51,6 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildHeader() {
+    final user = FirebaseAuth.instance.currentUser;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -63,30 +67,35 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       child: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             backgroundColor: Colors.white,
             radius: 30,
-            child: Icon(
-              Icons.settings,
-              color: Color(0xFF2A815E),
-              size: 35,
-            ),
+            backgroundImage: user?.photoURL != null
+                ? NetworkImage(user!.photoURL!)
+                : null,
+            child: user?.photoURL == null
+                ? const Icon(
+                    Icons.person,
+                    color: Color(0xFF2A815E),
+                    size: 35,
+                  )
+                : null,
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Definições',
-                  style: TextStyle(
+                Text(
+                  user?.displayName ?? 'Definições',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Personalize a sua experiência',
+                  user?.email ?? 'Personalize a sua experiência',
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
                     fontSize: 16,

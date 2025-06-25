@@ -153,7 +153,10 @@ class _WelcomePageState extends State<WelcomePage> {
               title: 'Ver Vendas',
               color: const Color(0xFF4CAF50),
               onTap: () {
-                MainNavigationController().changeTab?.call(1);
+                Navigator.pushReplacementNamed(context, '/');
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  MainNavigationController().changeTab?.call(1);
+                });
               },
             ),
             _buildActionCard(
@@ -161,7 +164,10 @@ class _WelcomePageState extends State<WelcomePage> {
               title: 'Mercado',
               color: const Color(0xFFFF9800),
               onTap: () {
-                MainNavigationController().changeTab?.call(2);
+                Navigator.pushReplacementNamed(context, '/');
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  MainNavigationController().changeTab?.call(2);
+                });
               },
             ),
             _buildActionCard(
@@ -169,7 +175,10 @@ class _WelcomePageState extends State<WelcomePage> {
               title: 'Gestão',
               color: const Color(0xFF2196F3),
               onTap: () {
-                MainNavigationController().changeTab?.call(4);
+                Navigator.pushReplacementNamed(context, '/');
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  MainNavigationController().changeTab?.call(4);
+                });
               },
             ),
           ],

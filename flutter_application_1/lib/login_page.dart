@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                const SizedBox(height: 24),
                 const Text(
                   'Login',
                   style: TextStyle(
@@ -57,22 +58,28 @@ class _LoginPageState extends State<LoginPage> {
                             : const Text("Entrar"),
                       ),
                       const SizedBox(height: 12),
-                      OutlinedButton(
-                        onPressed: _isLoading ? null : _onGoogleLogin,
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0x802A815E)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+                      ElevatedButton.icon(
+                        icon: Image.asset('assets/logo2.jpg', height: 24),
+                        label: const Text('Entrar com Google'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          minimumSize: const Size(double.infinity, 48),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 2,
                         ),
-                        child: const Text(
-                          'Entrar com Google',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF2A815E),
-                              fontWeight: FontWeight.w600),
-                        ),
+                        onPressed: () async {
+                          final userCredential = await FirebaseService().signInWithGoogle();
+                          if (userCredential != null) {
+                            if (context.mounted) {
+                              Navigator.of(context).pushReplacementNamed('/');
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Falha ao entrar com Google.')),
+                            );
+                          }
+                        },
                       ),
                     ],
                   ),

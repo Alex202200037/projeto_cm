@@ -25,28 +25,30 @@ class FirebaseService {
     return cred.user;
   }
 
-  Future<User?> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) return null;
+    if (googleUser == null) return null; // O utilizador cancelou
+
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final cred = await _auth.signInWithCredential(credential);
-    // Se for novo, criar perfil
-    final doc = await _db.collection('users').doc(cred.user!.uid).get();
-    if (!doc.exists) {
-      await _db.collection('users').doc(cred.user!.uid).set({
-        'uid': cred.user!.uid,
-        'email': cred.user!.email,
-        'nome': cred.user!.displayName ?? '',
-        'fotoUrl': cred.user!.photoURL ?? '',
+    final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+    // Guardar/atualizar perfil no Firestore
+    final user = userCredential.user;
+    if (user != null) {
+      await _db.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'email': user.email,
+        'nome': user.displayName ?? '',
+        'fotoUrl': user.photoURL ?? '',
         'tipo': 'farmer',
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
     }
-    return cred.user;
+    return userCredential;
   }
 
   Future<void> logout() async {
